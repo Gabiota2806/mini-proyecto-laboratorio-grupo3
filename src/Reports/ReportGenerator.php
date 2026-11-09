@@ -2,28 +2,101 @@
 /**
  * ============================================================================
  *  GENERACION DE REPORTES
- *  Patron esperado: DECORATOR (estructural)
+ *  Patron aplicado: DECORATOR (estructural)
  * ============================================================================
  *
- *  ❌ DEUDA SEMBRADA
- *     El metodo recibe banderas booleanas para activar agregados.
- *     Con 3 banderas hay 8 combinaciones dentro del mismo metodo.
- *     Con 5 banderas hay 32. El metodo se vuelve imposible de probar.
- *     Ademas, en la llamada nadie entiende que significa generate(true, false, true).
- *
- *  ✅ FORMA CORRECTA
- *     Un contrato Report + decoradores que envuelven al reporte base.
- *     Cada agregado es una clase que se puede combinar en tiempo de ejecucion.
+ *  Refactorizado segun metodologia Refactoring.Guru:
+ *  - Interfaz comun Report para el componente base y los decoradores.
+ *  - Componente concreto BasicReport que define el contenido primordial.
+ *  - Clase abstracta ReportDecorator y decoradores concretos:
+ *      * DigitalSignatureDecorator
+ *      * PdfReportDecorator (Ejercicio 4)
+ *      * WatermarkDecorator (Ejercicio 4)
+ *  - Se elimina el "boolean trap" permitiendo componer agregados dinamicamente
+ *    en tiempo de ejecucion en cualquier combinacion.
  * ============================================================================
  */
 
+declare(strict_types=1);
+
+/**
+ * Contrato base para la generacion de reportes.
+ */
+interface Report
+{
+    public function generate(): string;
+}
+
+/**
+ * Componente base concreto que genera el cuerpo principal del reporte.
+ */
+final class BasicReport implements Report
+{
+    public function __construct(private string $contenido) {}
+
+    public function generate(): string
+    {
+        return "Reporte: {$this->contenido}";
+    }
+}
+
+/**
+ * Decorador base que delega la ejecucion en el objeto Report envuelto.
+ */
+abstract class ReportDecorator implements Report
+{
+    public function __construct(protected Report $report) {}
+
+    public function generate(): string
+    {
+        return $this->report->generate();
+    }
+}
+
+/**
+ * Agrega firma digital criptografica al reporte.
+ */
+final class DigitalSignatureDecorator extends ReportDecorator
+{
+    public function generate(): string
+    {
+        return parent::generate() . ' + firma digital';
+    }
+}
+
+/**
+ * Transforma o exporta el reporte en formato PDF.
+ * Resolucion del Ejercicio 4 del TP.
+ */
+final class PdfReportDecorator extends ReportDecorator
+{
+    public function generate(): string
+    {
+        return parent::generate() . ' + PDF';
+    }
+}
+
+/**
+ * Incorpora una marca de agua de seguridad institucional al reporte.
+ * Resolucion del Ejercicio 4 del TP.
+ */
+final class WatermarkDecorator extends ReportDecorator
+{
+    public function generate(): string
+    {
+        return parent::generate() . ' + marca de agua';
+    }
+}
+
+/**
+ * Generador y facade auxiliar de reportes.
+ * Mantenido con retrocompatibilidad para codigo cliente legacy,
+ * delegando la composicion en la cadena de decoradores.
+ */
 class ReportGenerator
 {
     /**
-     * ❌ METODO MAL APLICADO: generate()
-     *    Sintoma: "boolean trap". El llamador escribe generate(true, false, true)
-     *    y seis meses despues nadie recuerda cual bandera era cual.
-     *    Viola OCP: agregar "codigo QR" implica un parametro mas y un if mas.
+     * Construye y ejecuta dinamicamente la cadena de decoradores segun las opciones activas.
      */
     public function generate(
         string $contenido,
@@ -31,69 +104,20 @@ class ReportGenerator
         bool $conPdf = false,
         bool $conMarcaDeAgua = false
     ): string {
-        $reporte = "Reporte: {$contenido}";
+        $report = new BasicReport($contenido);
 
         if ($conFirmaDigital) {
-            $reporte .= ' + firma digital';
+            $report = new DigitalSignatureDecorator($report);
         }
 
         if ($conPdf) {
-            $reporte .= ' + PDF';
+            $report = new PdfReportDecorator($report);
         }
 
         if ($conMarcaDeAgua) {
-            $reporte .= ' + marca de agua';
+            $report = new WatermarkDecorator($report);
         }
 
-        // ❌ El proximo agregado suma otro parametro y otro if.
-        return $reporte;
+        return $report->generate();
     }
 }
-
-/*
- * ============================================================================
- *  ✅ FORMA CORRECTA — DECORATOR
- * ============================================================================
- *
- * interface Report
- * {
- *     public function generate(): string;
- * }
- *
- * final class BasicReport implements Report
- * {
- *     public function __construct(private string $contenido) {}
- *
- *     public function generate(): string
- *     {
- *         return "Reporte: {$this->contenido}";
- *     }
- * }
- *
- * final class DigitalSignatureDecorator implements Report
- * {
- *     public function __construct(private Report $report) {}   // envuelve
- *
- *     public function generate(): string
- *     {
- *         return $this->report->generate() . ' + firma digital';
- *     }
- * }
- *
- * Uso:
- *   $reporte = new BasicReport('Pedido 1');
- *   $reporte = new DigitalSignatureDecorator($reporte);
- *   $reporte = new PdfReportDecorator($reporte);
- *   echo $reporte->generate();
- *
- * Encadenamiento:
- *   BasicReport -> Signature -> Pdf -> Watermark
- *
- * ----------------------------------------------------------------------------
- * EJERCICIO 4 (TP): implementar PdfReportDecorator y WatermarkDecorator.
- *
- * CONSECUENCIA A JUSTIFICAR EN EL PR: el orden de los decoradores cambia el
- * resultado. Firmar y despues pasar a PDF no es lo mismo que al reves.
- * Como documentan esa restriccion para el resto del equipo?
- * ============================================================================
- */
