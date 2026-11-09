@@ -12,7 +12,7 @@ durante la ronda de refactor y la usa como descripción de su Pull Request.
 | `src/Notifications/NotificationSender.php` | `if` por tipo repetido en 3 archivos | OCP + DIP | Factory | Grupo 3 | `feat/patron-factory` | [#2](https://github.com/Gabiota2806/mini-proyecto-laboratorio-grupo3/pull/2) |
 | `src/Legacy/LegacyNotifier.php` | Clase de terceros modificada + copia y pega | DRY + límites del sistema | Adapter | Grupo 3 | `feat/patron-adapter` | [#3](https://github.com/Gabiota2806/mini-proyecto-laboratorio-grupo3/pull/3) |
 | `src/Reports/ReportGenerator.php` | Banderas booleanas (`boolean trap`) | OCP | Decorator | Grupo 3 | `feat/patron-decorator` | [#4](https://github.com/Gabiota2806/mini-proyecto-laboratorio-grupo3/pull/4) |
-| `src/Events/OrderEvents.php` | Avisos encadenados a clases concretas | DIP | Observer | | | |
+| `src/Events/OrderEvents.php` | Avisos encadenados a clases concretas | DIP | Observer | Grupo 3 | `feat/patron-observer` | [#5](https://github.com/Gabiota2806/mini-proyecto-laboratorio-grupo3/pull/5) |
 | `src/Services/OrderService.php` | Método que hace de todo | SRP | Facade | | | |
 | `src/Controllers/OrderController.php` | SQL + negocio + HTML juntos | SRP + MVC | MVC | | | |
 | `views/orders.php` | Consulta, calcula y no escapa | MVC + seguridad | MVC | | | |
