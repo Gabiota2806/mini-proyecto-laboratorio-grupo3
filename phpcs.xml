@@ -15,4 +15,5 @@
 
     <file>tests</file>
     <file>src/Pricing</file>
+    <file>src/Reports</file>
 </ruleset>

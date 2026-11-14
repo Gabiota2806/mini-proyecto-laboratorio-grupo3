@@ -11,7 +11,7 @@ durante la ronda de refactor y la usa como descripción de su Pull Request.
 | `src/Pricing/PriceCalculator.php` | `switch` con todos los algoritmos, duplicado | OCP + DRY | Strategy | Grupo 3 | `feat/patron-strategy` | [#1](https://github.com/Gabiota2806/mini-proyecto-laboratorio-grupo3/pull/1) |
 | `src/Notifications/NotificationSender.php` | `if` por tipo repetido en 3 archivos | OCP + DIP | Factory | | | |
 | `src/Legacy/LegacyNotifier.php` | Clase de terceros modificada + copia y pega | DRY + límites del sistema | Adapter | | | |
-| `src/Reports/ReportGenerator.php` | Banderas booleanas (`boolean trap`) | OCP | Decorator | | | |
+| `src/Reports/ReportGenerator.php` | Banderas booleanas (`boolean trap`) | OCP | Decorator | Grupo 3 (Valeria) | `feat/patron-decorator` | [#8](https://github.com/Gabiota2806/mini-proyecto-laboratorio-grupo3/pull/8) |
 | `src/Events/OrderEvents.php` | Avisos encadenados a clases concretas | DIP | Observer | | | |
 | `src/Services/OrderService.php` | Método que hace de todo | SRP | Facade | | | |
 | `src/Controllers/OrderController.php` | SQL + negocio + HTML juntos | SRP + MVC | MVC | | | |
