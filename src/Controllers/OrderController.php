@@ -80,13 +80,16 @@ class OrderController
     }
 
     /**
-     * ❌ METODO MAL APLICADO: report()
-     *    Usa banderas booleanas ilegibles (ver ReportGenerator).
+     * Reporte del dia con firma digital, PDF y marca de agua (Decorator).
      */
     public function report(): void
     {
-        $generador = new ReportGenerator();
-        echo $generador->generate('Pedidos del dia', true, true, true);
+        $reporte = new WatermarkDecorator(
+            new PdfReportDecorator(
+                new DigitalSignatureDecorator(new BasicReport('Pedidos del dia'))
+            )
+        );
+        echo $reporte->generate();
     }
 }
 

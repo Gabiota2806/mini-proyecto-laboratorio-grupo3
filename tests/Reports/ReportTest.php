@@ -4,36 +4,66 @@ declare(strict_types=1);
 
 namespace Tests\Reports;
 
+use BasicReport;
+use DigitalSignatureDecorator;
+use PdfReportDecorator;
 use PHPUnit\Framework\TestCase;
-use ReportGenerator;
+use Report;
+use WatermarkDecorator;
 
 /**
- * Tests de caracterizacion: fijan la salida ACTUAL del generador de reportes
- * antes del refactor, para demostrar que el comportamiento no cambia.
+ * Los textos esperados son EXACTAMENTE los mismos que producia el antiguo
+ * ReportGenerator::generate() con banderas booleanas (ver commit anterior):
+ * el refactor no cambia el comportamiento.
  */
 final class ReportTest extends TestCase
 {
     public function testBasicReportWithoutExtras(): void
     {
-        $this->assertSame(
-            'Reporte: Pedido 1',
-            (new ReportGenerator())->generate('Pedido 1')
-        );
+        $this->assertSame('Reporte: Pedido 1', (new BasicReport('Pedido 1'))->generate());
     }
 
     public function testDailyReportUsedByOrderController(): void
     {
+        $reporte = new WatermarkDecorator(
+            new PdfReportDecorator(
+                new DigitalSignatureDecorator(new BasicReport('Pedidos del dia'))
+            )
+        );
+
         $this->assertSame(
             'Reporte: Pedidos del dia + firma digital + PDF + marca de agua',
-            (new ReportGenerator())->generate('Pedidos del dia', true, true, true)
+            $reporte->generate()
         );
     }
 
     public function testOrderReportUsedByOrderService(): void
     {
-        $this->assertSame(
-            'Reporte: Pedido 1 + firma digital + PDF',
-            (new ReportGenerator())->generate('Pedido 1', true, true, false)
+        $reporte = new PdfReportDecorator(
+            new DigitalSignatureDecorator(new BasicReport('Pedido 1'))
         );
+
+        $this->assertSame('Reporte: Pedido 1 + firma digital + PDF', $reporte->generate());
+    }
+
+    public function testEachDecoratorIsAlsoAReport(): void
+    {
+        $reporte = new WatermarkDecorator(new BasicReport('Pedido 1'));
+
+        $this->assertInstanceOf(Report::class, $reporte);
+        $this->assertSame('Reporte: Pedido 1 + marca de agua', $reporte->generate());
+    }
+
+    /**
+     * Documenta la consecuencia negativa del patron: el orden de los
+     * decoradores cambia el resultado. Si este test falla, alguien cambio
+     * el orden acordado sin avisar.
+     */
+    public function testDecoratorOrderChangesTheResult(): void
+    {
+        $firmaYPdf = new PdfReportDecorator(new DigitalSignatureDecorator(new BasicReport('X')));
+        $pdfYFirma = new DigitalSignatureDecorator(new PdfReportDecorator(new BasicReport('X')));
+
+        $this->assertNotSame($firmaYPdf->generate(), $pdfYFirma->generate());
     }
 }

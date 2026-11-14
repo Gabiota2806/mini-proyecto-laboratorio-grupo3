@@ -2,6 +2,7 @@ parameters:
     level: 2
     paths:
         - src/Pricing
+        - src/Reports
         - tests
     excludePaths:
         - vendor/*
