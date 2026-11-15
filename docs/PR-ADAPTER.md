@@ -1,7 +1,10 @@
 # Pull Request: Refactorización de Sistema Heredado mediante Patrón Adapter
 
 - **Rama:** `feat/patron-adapter`
-- **Archivo refactorizado:** `src/Legacy/LegacyNotifier.php`
+- **Archivos del refactor:**
+  - `src/Legacy/LegacyNotifier.php` (clase original del proveedor preservada intacta)
+  - `src/Legacy/LegacyNotifierAdapter.php` (clase adaptadora por composición)
+  - `src/Notifications/Notification.php` (interfaz unificada)
 - **Patrón aplicado:** Adapter (Estructural)
 - **Autor:** Maxi Gonzalez (Grupo 3)
 - **Revisor asignado:** Gabriel Pineda (Grupo 3)
@@ -79,7 +82,7 @@ La consigna del TP establece:
 > *Pregunta para el PR: Si mañana el proveedor cambia sendMessage() por dispatch(), ¿cuántos archivos de tu sistema cambian?"*
 
 **Respuesta a la pregunta de la cátedra:**
-Cambia **exactamente UN (1) solo archivo**: `src/Legacy/LegacyNotifier.php`, en la línea interna del adaptador:
+Cambia **exactamente UN (1) solo archivo**: cambia solo `LegacyNotifierAdapter.php`, en la línea interna del adaptador:
 ```php
 $this->legacy->dispatch($message);
 ```
