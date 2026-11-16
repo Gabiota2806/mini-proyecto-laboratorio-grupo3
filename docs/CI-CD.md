@@ -92,7 +92,17 @@ composer check
 
 ## 5. Política de Bloqueo de Fusión (Branch Protection Rules)
 
-Conforme a la consigna del TP N.º 4, el repositorio debe implementar una política formal que **bloquee la fusión de un Pull Request si el pipeline de CI no finaliza con éxito**.
+Conforme a la consigna del TP N.º 4, el repositorio implementa una política formal que **bloquea la fusión de un Pull Request si el pipeline de CI no finaliza con éxito**.
+
+### Estado Actual en el Repositorio (`main`)
+
+- **Estado:** ✅ **Activa** en `Gabiota2806/mini-proyecto-laboratorio-grupo3` (rama `main`, configurada el 15/11/2026).
+- **Reglas activadas:**
+  - Pull Request obligatorio antes de fusionar, con al menos **1 aprobación** de revisión cruzada (`required_approving_review_count: 1`).
+  - Verificación obligatoria del job **`Lint, Static Analysis & Tests`** en estado exitoso y rama actualizada respecto a `main` (`strict: true`).
+  - Aplicación estricta sin excepciones para administradores (`enforce_admins: true`).
+- **Verificación por GitHub CLI:**
+  `gh api repos/Gabiota2806/mini-proyecto-laboratorio-grupo3/branches/main/protection`
 
 ### Configuración en GitHub
 
