@@ -3,6 +3,7 @@
 
 # Dependencias
 /vendor/
+.phpunit.cache/
 
 # Entorno
 .env

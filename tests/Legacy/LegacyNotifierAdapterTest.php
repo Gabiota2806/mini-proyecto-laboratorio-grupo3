@@ -8,6 +8,7 @@ use LegacyNotifier;
 use LegacyNotifierAdapter;
 use Notification;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 final class LegacyNotifierAdapterTest extends TestCase
 {
@@ -26,5 +27,12 @@ final class LegacyNotifierAdapterTest extends TestCase
 
         $this->expectOutputString("[LEGACY] Aviso legado de prueba<br>");
         $adapter->send('Aviso legado de prueba');
+    }
+
+    public function testAdapterRejectsObjectThatIsNotLegacyNotifier(): void
+    {
+        $this->expectException(TypeError::class);
+
+        new LegacyNotifierAdapter(new \stdClass());
     }
 }

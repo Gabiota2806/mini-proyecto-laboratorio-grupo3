@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ============================================================================
  *  CALCULO DE PRECIOS
@@ -39,7 +40,9 @@ final class PrivatePatientStrategy implements PricingStrategy
  */
 final class InsuranceStrategy implements PricingStrategy
 {
-    public function __construct(private float $discount = 0.30) {}
+    public function __construct(private float $discount = 0.30)
+    {
+    }
 
     public function calculate(float $amount): float
     {
@@ -52,7 +55,9 @@ final class InsuranceStrategy implements PricingStrategy
  */
 final class RetiredPatientStrategy implements PricingStrategy
 {
-    public function __construct(private float $discount = 0.50) {}
+    public function __construct(private float $discount = 0.50)
+    {
+    }
 
     public function calculate(float $amount): float
     {
@@ -66,7 +71,9 @@ final class RetiredPatientStrategy implements PricingStrategy
  */
 final class PrepaidStrategy implements PricingStrategy
 {
-    public function __construct(private float $discount = 0.20) {}
+    public function __construct(private float $discount = 0.20)
+    {
+    }
 
     public function calculate(float $amount): float
     {

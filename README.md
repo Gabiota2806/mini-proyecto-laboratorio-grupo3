@@ -1,7 +1,9 @@
 # laboratorio-pedidos — proyecto de práctica
 
+[![CI Pipeline](https://github.com/Gabiota2806/mini-proyecto-laboratorio-grupo3/actions/workflows/ci.yml/badge.svg)](https://github.com/Gabiota2806/mini-proyecto-laboratorio-grupo3/actions/workflows/ci.yml)
+
 Sistema de gestión de pedidos de un laboratorio de análisis clínicos.
-**PHP Vanilla, sin frameworks, sin Composer.** Corre en XAMPP tal cual está.
+**PHP Vanilla compatible con XAMPP**, con gestión de dependencias Composer para Testing y CI.
 
 > ⚠️ **Este proyecto está roto a propósito.**
 > Cada archivo contiene deuda técnica sembrada, marcada con comentarios:
@@ -32,6 +34,22 @@ Acciones disponibles:
 
 La persistencia está simulada en memoria para que el proyecto arranque sin
 configurar MySQL. Eso **no** es parte de la deuda a corregir.
+
+---
+
+## Testing e Integración Continua (CI)
+
+Para correr la suite de herramientas de calidad localmente:
+
+```bash
+composer install          # Instala dependencias de desarrollo
+composer test             # Ejecuta los tests unitarios con PHPUnit
+composer cs               # Valida estándares de código PSR-12 con PHP_CodeSniffer
+composer stan             # Análisis estático de tipos con PHPStan
+composer check            # Ejecuta todo el conjunto (linter + stan + tests)
+```
+
+Consultar [docs/CI-CD.md](docs/CI-CD.md) para más detalles sobre la arquitectura del pipeline y las políticas de fusión requeridas en el TP 4.
 
 ---
 
